@@ -5,6 +5,7 @@
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
 <script type="text/javascript" src="wordspt.js"></script>
 <script type="text/javascript" src="wordsen.js"></script>
+<script type="text/javascript" src="wordses.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css">
 <meta charset="UTF-8">
 <title> smoke words </title>
@@ -17,6 +18,12 @@ var showResults = false
 var timepassed = 0
 var timer = null
 var language = 'pt'
+
+var wordsObject = {
+  pt: wordspt,
+  es: wordses,
+  en: wordsen
+}
 
 function removeAccents(str) {
   var accents    = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
@@ -32,16 +39,24 @@ function removeAccents(str) {
   return str.join('');
 }
 
-function handleOnChangeLanguage(){
-  language = language === 'pt' ? 'en' : 'pt'
+function handleOnChangeLanguage(value){
+  language = value
 
-  if(language === 'pt'){
-     $("#language_en_image").css('filter', 'grayscale(100%)')
-     $("#language_pt_image").css('filter', 'grayscale(0%)')
-  } else {
-    $("#language_en_image").css('filter', 'grayscale(0%)')
-    $("#language_pt_image").css('filter', 'grayscale(100%)')
-  }
+  $(".languageIcon").css("filter", "grayscale(100%)")
+  $("#language_" + language + "_image").css('filter', 'grayscale(0%)')
+
+  // var selects = document.getElementsByTagName("languageIcon");
+  // for(var i = 0, i = selects.length ;i++){
+  //    selects[i].className += " hidden";
+  // }
+  //
+  // if(language === 'pt'){
+  //    $("#language_en_image").css('filter', 'grayscale(100%)')
+  //    $("#language_pt_image").css('filter', 'grayscale(0%)')
+  // } else {
+  //   $("#language_en_image").css('filter', 'grayscale(0%)')
+  //   $("#language_pt_image").css('filter', 'grayscale(100%)')
+  // }
 
   lettersArray.length > 0 ? populateWords() : null
 }
@@ -107,7 +122,7 @@ function populateLettersArray(){
 
 
 function populateWords(){
-  var words = language === 'pt' ? wordspt : wordsen
+  var words = wordsObject[language]
 
   var wordsSelected = []
 
@@ -150,8 +165,9 @@ $( document ).ready(function() {
 
   <div class="gameControlsContainer" id="gameControls">
     <img id="shuffle_image" src="images/shuffle.png" class="shuffleIcon" onclick="javascript: handleOnClickShuffleLetter()"  />
-    <img id="language_pt_image" src="images/pt_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage()"  />
-    <img id="language_en_image" src="images/uk_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage()"  />
+    <img id="language_pt_image" src="images/pt_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage('pt')"  />
+    <img id="language_en_image" src="images/uk_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage('en')"  />
+    <img id="language_es_image" src="images/es_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage('es')"  />
     <div class="timer" value="0" max="60" id="timer"></div>
   </div>
 
