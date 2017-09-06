@@ -26,11 +26,13 @@ input::-webkit-inner-spin-button {
 }
 
 .languageIcon {
-  margin: 5px 2px;
+  margin: 5px 8px;
+  filter: grayscale(100%);
+
 }
 
-#language_en_image{
-  filter: grayscale(100%);
+#language_pt_image{
+  filter: grayscale(0%);
 }
 
 .timer{
