@@ -1,0 +1,176 @@
+<html>
+
+<head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+<script type="text/javascript" src="wordspt.js"></script>
+<script type="text/javascript" src="wordsen.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+<meta charset="UTF-8">
+<title> smoke words </title>
+
+<script>
+
+var numberLetters = 0
+var lettersArray = []
+var showResults = false
+var timepassed = 0
+var timer = null
+var language = 'pt'
+
+function removeAccents(str) {
+  var accents    = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+  var accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+  str = str.split('');
+  var strLen = str.length;
+  var i, x;
+  for (i = 0; i < strLen; i++) {
+    if ((x = accents.indexOf(str[i])) != -1) {
+      str[i] = accentsOut[x];
+    }
+  }
+  return str.join('');
+}
+
+function handleOnChangeLanguage(){
+  language = language === 'pt' ? 'en' : 'pt'
+
+  if(language === 'pt'){
+     $("#language_en_image").css('filter', 'grayscale(100%)')
+     $("#language_pt_image").css('filter', 'grayscale(0%)')
+  } else {
+    $("#language_en_image").css('filter', 'grayscale(0%)')
+    $("#language_pt_image").css('filter', 'grayscale(100%)')
+  }
+
+  lettersArray.length > 0 ? populateWords() : null
+}
+
+function handleOnChangeInput(value, index){
+    lettersArray[index] = value
+    clearInterval(timer)
+    timepassed = 0;
+
+    populateWords()
+
+    timer = setInterval(function(){
+      var time = 60 - timepassed
+      $( "#timer" ).html(time + " <a style='font-weight: normal'>sec</a>");
+      if(time <= 0){
+        clearInterval(timer)
+        timepassed = 0;
+      }
+      timepassed++
+    },1000);
+
+}
+
+function handleOnClickShuffleLetter(){
+
+  var new_array = lettersArray
+  while(JSON.stringify(lettersArray)==JSON.stringify(new_array) && lettersArray.length > 1){
+    new_array = _.shuffle(lettersArray);
+  }
+
+  lettersArray = new_array
+  populateLettersArray();
+}
+
+function handleOnClickAddLetter(){
+  numberLetters++
+  populateLettersArray();
+}
+
+function handleOnClickToggleResults(){
+  showResults ? $( "#results" ).css('display', 'none') : $( "#results" ).css('display', 'flex')
+  showResults = !showResults
+
+  $("#show_image").attr("src",showResults ? "images/eye_open.png" : "images/eye_close.png");
+
+}
+
+
+function populateLettersArray(){
+  var body = ""
+
+  for (var i = 0; i < numberLetters; i++) {
+
+    var value = lettersArray[i] ? lettersArray[i] : ''
+
+    body += "<div class='letterContainer' >"
+    body += "<input value='" + value + "' onChange='javascript: handleOnChangeInput(this.value, " + i + ")' maxlength='1' class='letterInput' type='text' />"
+    body += "</div>"
+  }
+
+  $( "#lettersContainer" ).html(body);
+}
+
+
+function populateWords(){
+  var words = language === 'pt' ? wordspt : wordsen
+
+  var wordsSelected = []
+
+  words.map( word => {
+    var contains = 1
+    var reducedWord = removeAccents(word.toLowerCase())
+
+    lettersArray.map( letter => {
+      var indexLetter = reducedWord.indexOf(letter.toLowerCase())
+      contains *= indexLetter !== -1
+      contains ? reducedWord = reducedWord.substr(0, indexLetter) + reducedWord.substr(indexLetter + 1) : null
+    })
+
+    contains === 1 ? wordsSelected.push(word) : null
+  })
+
+  var body = ""
+
+  wordsSelected.map( selectedWord => {
+    body += "<a class='wordContainer' target='_blank' href='http://google.com/search?q=" + selectedWord + "'> " + selectedWord + " </a>"
+  })
+
+  body = body !== "" ? body : "<div class='noResults' > No results to display </div>"
+
+  $( "#number_results" ).html(wordsSelected.length + " results found");
+  $( "#results" ).html(body);
+
+}
+
+
+$( document ).ready(function() {
+  handleOnClickAddLetter()
+});
+
+</script>
+
+</head>
+
+<body>
+
+  <div class="gameControlsContainer" id="gameControls">
+    <img id="shuffle_image" src="images/shuffle.png" class="shuffleIcon" onclick="javascript: handleOnClickShuffleLetter()"  />
+    <img id="language_pt_image" src="images/pt_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage()"  />
+    <img id="language_en_image" src="images/uk_flag.png" class="languageIcon" onclick="javascript: handleOnChangeLanguage()"  />
+    <div class="timer" value="0" max="60" id="timer"></div>
+  </div>
+
+
+  <div class="lettersWrapper">
+
+    <div class="lettersContainer" id="lettersContainer" > </div>
+
+    <img class="addButton" src="images/plus.png" onclick="javascript:handleOnClickAddLetter()"/>
+
+  </div>
+
+  <div class="resultsInfoContainer">
+    <img id="show_image" src="images/eye_close.png" class="showResultsIcon" onclick="javascript: handleOnClickToggleResults()"  />
+    <div id="number_results"></div>
+  </div>
+
+  <div id="results" class="resultsContainer"> </div>
+
+</body>
+
+</html>

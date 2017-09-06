@@ -1,0 +1,105 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: montserrat, Roboto, Helvetica, sans-serif, ProximaNova-It; ProximaNova;
+  background-color: rgb(218, 218, 218);
+  padding: 20px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.gameControlsContainer{
+  margin: 0px 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.shuffleIcon, .languageIcon {
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  margin: 5px 20px 5px 2px;
+}
+
+.languageIcon {
+  margin: 5px 2px;
+}
+
+#language_en_image{
+  filter: grayscale(100%);
+}
+
+.timer{
+  margin-left: 10px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.lettersWrapper, .lettersContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.addButton{
+  width: 20px;
+  height: 20px;
+  margin: 10px 5px;
+  cursor: pointer;
+}
+
+.letterContainer{
+  margin: 5px;
+}
+
+.letterInput{
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.resultsInfoContainer{
+  margin: 0 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.resultsInfoContainer > div {
+  margin-left: 10px;
+  font-size: 9px;
+}
+
+.showResultsIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+}
+
+.resultsContainer{
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  display: none;
+}
+
+.wordContainer, .noResults{
+  font-size: 12px;
+  margin: 5px;
+  color: rgb(82, 82, 82);
+  text-decoration: none !important;
+}
+
+.wordContainer:hover{
+  cursor: pointer;
+  color: rgb(15, 15, 15);
+}
